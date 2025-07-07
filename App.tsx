@@ -1,20 +1,32 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Router } from "./src/navigation/Router";
+import { AuthProvider, useAuth } from "./src/context/AuthContext";
+import { StreamVideo } from "@stream-io/video-react-native-sdk";
+import { RingingCalls } from "./src/screens/RingingCall/RingingCall";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+    <GestureHandlerRootView>
       <StatusBar style="auto" />
-    </View>
+      <AuthProvider>
+        <AppWithStream />
+      </AuthProvider>
+    </GestureHandlerRootView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+function AppWithStream() {
+  const { client } = useAuth();
+
+  if (!client) {
+    return <Router />;
+  }
+
+  return (
+    <StreamVideo client={client}>
+      <Router />
+      <RingingCalls />
+    </StreamVideo>
+  );
+}
