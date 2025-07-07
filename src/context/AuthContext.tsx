@@ -19,8 +19,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [client, setClient] = useState<StreamVideoClient | null>(null);
 
   const initClient = async () => {
-    const token = storage.getData(storage.KEY.STREAM_TOKEN);
-    const userId = storage.getData(storage.KEY.USER_ID);
+    const token = await storage.getData(storage.KEY.STREAM_TOKEN);
+    const userId = await storage.getData(storage.KEY.USER_ID);
     console.log("token", token);
     console.log("userId", userId);
     const apiKey = process.env.EXPO_PUBLIC_STREAM_API_KEY;

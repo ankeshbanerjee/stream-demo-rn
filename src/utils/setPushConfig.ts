@@ -58,10 +58,10 @@ export function setPushConfig() {
 
       //   const user: User = { id: userId, name: userName };
 
-      // const userId = storage.getData(storage.KEY.USER_ID);
-      // const token = storage.getData(storage.KEY.STREAM_TOKEN);
-      const userId = await AsyncStorage.getItem(storage.KEY.USER_ID);
-      const token = await AsyncStorage.getItem(storage.KEY.STREAM_TOKEN);
+      const userId = await storage.getData(storage.KEY.USER_ID);
+      const token = await storage.getData(storage.KEY.STREAM_TOKEN);
+      // const userId = await AsyncStorage.getItem(storage.KEY.USER_ID);
+      // const token = await AsyncStorage.getItem(storage.KEY.STREAM_TOKEN);
       const apiKey = process.env.EXPO_PUBLIC_STREAM_API_KEY;
       if (!userId || !token || !apiKey) {
         console.log("returning....");

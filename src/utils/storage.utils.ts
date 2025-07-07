@@ -1,31 +1,67 @@
-import { MMKV } from "react-native-mmkv";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export enum KEY {
   STREAM_TOKEN = "STREAM_TOKEN",
   USER_ID = "USER_ID",
 }
 
-const mmkv = new MMKV();
+export const getData = async (key: string): Promise<string | null> => {
+  try {
+    return await AsyncStorage.getItem(key);
+  } catch (error) {
+    console.error("Error getting data from AsyncStorage", error);
+    return null;
+  }
+};
 
-export const getData = (key: string) => mmkv.getString(key);
+export const storeData = async (key: string, value: string): Promise<void> => {
+  try {
+    // let stringValue: string;
 
-export const storeData = (
-  key: string,
-  value: boolean | string | number | ArrayBuffer
-) => mmkv.set(key, value);
+    // if (value instanceof ArrayBuffer) {
+    //   // Convert ArrayBuffer to base64
+    //   stringValue = Buffer.from(value).toString("base64");
+    // } else {
+    //   stringValue = JSON.stringify(value);
+    // }
 
-export const removeData = (key: string) => mmkv.delete(key);
+    await AsyncStorage.setItem(key, value);
+  } catch (error) {
+    console.error("Error storing data in AsyncStorage", error);
+  }
+};
 
-export const doesExist = (key: string) => mmkv.contains(key);
+export const removeData = async (key: string): Promise<void> => {
+  try {
+    await AsyncStorage.removeItem(key);
+  } catch (error) {
+    console.error("Error removing data from AsyncStorage", error);
+  }
+};
 
-export const clearStorage = () => mmkv.clearAll();
+export const doesExist = async (key: string): Promise<boolean> => {
+  try {
+    const value = await AsyncStorage.getItem(key);
+    return value !== null;
+  } catch (error) {
+    console.error("Error checking existence in AsyncStorage", error);
+    return false;
+  }
+};
+
+export const clearStorage = async (): Promise<void> => {
+  try {
+    await AsyncStorage.clear();
+  } catch (error) {
+    console.error("Error clearing AsyncStorage", error);
+  }
+};
 
 export const storage = {
-  mmkv,
   getData,
   storeData,
   removeData,
   doesExist,
-  KEY,
   clearStorage,
+  KEY,
 };

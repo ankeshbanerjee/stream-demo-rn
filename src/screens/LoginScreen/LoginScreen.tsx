@@ -10,14 +10,14 @@ import { styles } from "./styles";
 import axios from "axios";
 import { T_User } from "../../types/user.types";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../navigation/params";
+import { AuthStackParamList } from "../../navigation/params";
 import Spinner from "react-native-loading-spinner-overlay";
 import CustomText from "../../components/CustomText";
 import { storage, storeData } from "../../utils/storage.utils";
 import { useAuth } from "../../context/AuthContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { CommonActions } from "@react-navigation/native";
 
-type Props = NativeStackScreenProps<RootStackParamList, "LOGIN">;
+type Props = NativeStackScreenProps<AuthStackParamList, "LOGIN">;
 
 const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -41,13 +41,16 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
         email,
         password,
       });
-      storeData(storage.KEY.STREAM_TOKEN, res.data.token);
-      storeData(storage.KEY.USER_ID, res.data.user._id);
-      await AsyncStorage.setItem(storage.KEY.STREAM_TOKEN, res.data.token);
-      await AsyncStorage.setItem(storage.KEY.USER_ID, res.data.user._id);
+      await storeData(storage.KEY.STREAM_TOKEN, res.data.token);
+      await storeData(storage.KEY.USER_ID, res.data.user._id);
       await initClient();
       setIsLoading(false);
-      navigation.replace("HOME");
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{ name: "MAIN" }],
+        })
+      );
     } catch (error) {
       console.log(error);
       setIsLoading(false);

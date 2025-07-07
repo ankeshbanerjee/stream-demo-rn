@@ -16,11 +16,12 @@ export default function SplashScreen({ navigation }: Props) {
     const setup = async () => {
       initService();
       await initClient();
+      const tokenExist = await storage.doesExist(storage.KEY.STREAM_TOKEN);
       setTimeout(() => {
-        if (storage.doesExist(storage.KEY.STREAM_TOKEN)) {
-          navigation.replace("HOME");
+        if (tokenExist === true) {
+          navigation.replace("MAIN");
         } else {
-          navigation.replace("LOGIN");
+          navigation.replace("AUTH");
         }
       }, 1000);
     };
